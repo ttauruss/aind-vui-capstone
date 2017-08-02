@@ -1,0 +1,8 @@
+
+Question 1.
+
+Model 0 (simple RNN) has very high training error which means that a single RNN layer is not enough to get decent results.
+Model 1 reduces the training error significantly but after 5th iteration validation error is higher than training error which means that our model is overfitting.
+135 to 145
+Model 2 has very low training error (80) by very high validation error (140) which is another case of overfitting.
+
