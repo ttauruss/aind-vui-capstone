@@ -138,7 +138,7 @@ def final_model1(input_dim, units, activation, output_dim=29):
     print(model.summary())
     return model
 
-def final_model2(input_dim, filters=200, kernel_size=11, conv_stride=2,
+def final_model(input_dim, filters=200, kernel_size=11, conv_stride=2,
     conv_border_mode='valid', units=200, recur_layers=2, output_dim=29):
     """ Build a recurrent + convolutional network for speech 
     """
@@ -154,7 +154,7 @@ def final_model2(input_dim, filters=200, kernel_size=11, conv_stride=2,
     input_rnn = BatchNormalization(name='bn_conv_1d')(conv_1d)
     # Add recurrent layers
     for i in range(recur_layers):
-        rnn_layer = GRU(units, return_sequences=True, implementation=2, dropout_W=0.2, dropout_U=0.2)(input_rnn)
+        rnn_layer = LSTM(units, return_sequences=True, implementation=2, dropout_W=0.2, dropout_U=0.2)(input_rnn)
         input_rnn = BatchNormalization()(rnn_layer)
     # simp_rnn = SimpleRNN(units, activation='relu',
         # return_sequences=True, implementation=2, name='rnn')(bn_cnn)
