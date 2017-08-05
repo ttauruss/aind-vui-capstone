@@ -125,7 +125,20 @@ def bidirectional_rnn_model(input_dim, units, output_dim=29):
     print(model.summary())
     return model
 
-def final_model_notgood(input_dim, filters=200, kernel_size=11, conv_stride=2,
+def final_model1(input_dim, units, activation, output_dim=29):
+    # Main acoustic input
+    input_data = Input(name='the_input', shape=(None, input_dim))
+    rnn_layer = GRU(units, return_sequences=True, implementation=2, dropout_W=0.2, dropout_U=0.2)(input_data)
+    bn_rnn = BatchNormalization()(rnn_layer)
+    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn) # Add softmax activation layer
+    y_pred = Activation('softmax', name='softmax')(time_dense)
+    # Specify the model
+    model = Model(inputs=input_data, outputs=y_pred)
+    model.output_length = lambda x: x
+    print(model.summary())
+    return model
+
+def final_model2(input_dim, filters=200, kernel_size=11, conv_stride=2,
     conv_border_mode='valid', units=200, recur_layers=2, output_dim=29):
     """ Build a recurrent + convolutional network for speech 
     """
@@ -156,34 +169,5 @@ def final_model_notgood(input_dim, filters=200, kernel_size=11, conv_stride=2,
     model.output_length = lambda x: cnn_output_length(
         x, kernel_size, conv_border_mode, conv_stride)
     # model.output_length = lambda x: x
-    print(model.summary())
-    return model
-
-def final_model(input_dim, units, activation, output_dim=29):
-    # Main acoustic input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    rnn_layer = GRU(units, return_sequences=True, implementation=2, dropout_W=0.2, dropout_U=0.2)(input_data)
-    bn_rnn = BatchNormalization()(rnn_layer)
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn) # Add softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specify the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: x
-    print(model.summary())
-    return model
-
-def final_model2():
-    """ Build a deep network for speech 
-    """
-    # Main acoustic input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # TODO: Specify the layers in your network
-    ...
-    # TODO: Add softmax activation layer
-    y_pred = ...
-    # Specify the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    # TODO: Specify model.output_length
-    model.output_length = ...
     print(model.summary())
     return model
